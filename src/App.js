@@ -12,9 +12,40 @@ import React from "react";
 // components
 //=============================
 
+export class TodoItem extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <>
+                <p>TodoItem Component</p>
+            </>
+        );
+    }
+}
+
+
 //=============================
 // containers
 //=============================
+
+
+export class TodoList extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <>
+                <p>TodoList Component</p>
+            </>
+        );
+    }
+}
+
 
 //=============================
 // App
@@ -29,7 +60,7 @@ export class App extends React.Component {
     render() {
         return (
             <>
-                <p>Master React</p>
+                <p>TodoMVC</p>
             </>
         );
     }
