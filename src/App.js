@@ -15,13 +15,20 @@ import React from "react";
 
 export class AddTodo extends React.Component {
 
+    constructor() {
+        super();
+        this.state = {
+            todo: '',
+        }
+    }
+
     updateInput = (e) => {
-        console.log(e);
+        this.setState({todo: e.target.value});
     };
 
     submitTodo = (e) => {
         e.preventDefault();
-        console.log('submit');
+        console.log(this.state);
     };
 
     render() {
