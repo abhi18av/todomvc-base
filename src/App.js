@@ -19,10 +19,15 @@ export class AddTodo extends React.Component {
         console.log(e);
     };
 
+    submitTodo = (e) => {
+        e.preventDefault();
+        console.log('submit');
+    };
+
     render() {
         return (
             <div className='addTodoContainer'>
-                <form>
+                <form onSubmit={(e) => this.submitTodo(e)}>
                     <input
                         onChange={(e) => this.updateInput(e)}
                         type='text'>
