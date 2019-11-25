@@ -16,8 +16,15 @@ import React from "react";
 export class App extends React.Component {
     constructor() {
         super();
-        this.state = {todos: []};
-    }
+        this.state = {
+            todos: ["task1", "task2"]
+        };
+    };
+
+
+    onChangeHandler = (e) => {
+        console.log(e);
+    };
 
 
     onSubmitHandler = (e) => {
@@ -25,6 +32,26 @@ export class App extends React.Component {
         console.log(e);
     };
 
+    addTask = () => {
+
+    };
+
+
+    componentDidMount() {
+
+        const todos = localStorage.getItem('todos');
+
+        if (todos) {
+            const savedTodos = JSON.parse(todos);
+            console.log("HAS todos", savedTodos);
+            this.setState({todos: savedTodos});
+
+        } else {
+            console.log("NO todos");
+        }
+
+
+    };
 
     render() {
 
@@ -37,12 +64,20 @@ export class App extends React.Component {
                     <header className="App-header">Master React</header>
                 </div>
 
+                { // render the current tasks of `todos` variable
+                    todos.map((_aTask, _index) => <div key={_index}>{_aTask}</div>)
+                }
 
                 <form onSubmit={(e) => this.onSubmitHandler(e)}>
                     <input
-                        type='text'>
+                        type='text'
+                        onChange={(e) => this.onChangeHandler(e)}>
                     </input>
-                    <button type='button'>Add Task</button>
+
+                    <button
+                        type='submit'>
+                        Add Task
+                    </button>
                 </form>
 
             </>
