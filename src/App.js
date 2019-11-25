@@ -1,14 +1,6 @@
 import React from "react";
 
 //=============================
-// constants
-//=============================
-
-//=============================
-// utils
-//=============================
-
-//=============================
 // App
 //=============================
 
@@ -25,8 +17,6 @@ export class App extends React.Component {
         this.setState({todo: e.target.value});
     };
 
-    // NOTE it's good to have this as a separate method but now it's almost indistinguishable from the event handlers
-    // TODO merge this function with the submitTodo
     addTodo = async (todo) => {
         await this.setState({
             todos: [...this.state.todos, {text: todo, completed: false}]
@@ -42,7 +32,7 @@ export class App extends React.Component {
         this.addTodo(this.state.todo);
     };
 
-    onClickToggleHandler = (e) => {
+    onClickToggleHandler = async (e) => {
         const clickedTodoText = e.target.innerText;
 
         const oldTodos = JSON.parse(localStorage.getItem("todos"));
@@ -57,18 +47,9 @@ export class App extends React.Component {
                 return _todo;
             }
         });
+        await this.setState({todos: newTodos});
         localStorage.setItem("todos", JSON.stringify(newTodos));
-        this.setState({todos: newTodos});
     };
-
-    // DONE detect which todo is being clicked
-    // clickDetecter = e => {
-    //     console.log(e.target.innerText);
-    //     const clickedTodo = e.target.innerText;
-    //     console.log(this.state.todos.filter(_todo => {
-    //         return _todo.text === clickedTodo
-    //     }));
-    // };
 
     componentDidMount() {
         const todos = localStorage.getItem("todos");
@@ -85,7 +66,7 @@ export class App extends React.Component {
         return (
             <>
                 <div className="App">
-                    <header className="App-header">Master React</header>
+                    <header className="App-header">TodoMVC</header>
                 </div>
 
                 <form onSubmit={e => this.onSubmitTodoHandler(e)}>
@@ -101,7 +82,18 @@ export class App extends React.Component {
                 {// render the current tasks of `todos` variable
                     todos.map((_aTask, _index) => (
                         <div key={_index}
-                            // onClick={e => this.clickDetecter(e)}
+                             style={_aTask.completed
+                                 ? {
+                                     "cursor": "pointer",
+                                     "textDecoration": "line-through",
+                                     "color": "green",
+                                     "margin": "10px"
+                                 }
+                                 : {
+                                     "cursor": "pointer",
+                                     "color": "blue",
+                                     "margin": "10px"
+                                 }}
                              onClick={e => this.onClickToggleHandler(e)}>
                             {_aTask.text}
                         </div>
