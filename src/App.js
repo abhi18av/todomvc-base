@@ -18,7 +18,7 @@ export class App extends React.Component {
         super();
         this.state = {
             todos: [],
-            todo: ''
+            todo: null
         };
     };
 
@@ -29,7 +29,7 @@ export class App extends React.Component {
     // NOTE it's good to have this as a separate method but now it's almost indistinguishable from the event handlers
     // TODO merge this function with the submitTodo
     addTodo = async (todo) => {
-        await this.setState({todos: [...this.state.todos, todo]});
+        await this.setState({todos: [...this.state.todos, {text: todo, completed: false}]});
 
         localStorage.setItem('todos', JSON.stringify(this.state.todos));
 
@@ -43,8 +43,24 @@ export class App extends React.Component {
     };
 
 
-    toggleTodo = () => {
+    updateTodo = (todo) => {
+        const newTodos = this.state.todos.map(_todo => {
+            if (todo === _todo) {
+                return {
+                    text: _todo.text,
+                    completed: !_todo.completed
+                }
+            } else {
+                return _todo;
+            }
+        });
+    };
 
+
+    toggleTodo = () => {
+        this.updateTodo(this.state.todo);
+        console.log('toggleTodo');
+        console.log(this.state.todos);
     };
 
     componentDidMount() {
@@ -89,7 +105,11 @@ export class App extends React.Component {
 
 
                 { // render the current tasks of `todos` variable
-                    todos.map((_aTask, _index) => <div key={_index}>{_aTask}</div>)
+                    todos.map((_aTask, _index) => <div
+                        key={_index}
+                        onClick={this.toggleTodo}>
+                        {_aTask.text}
+                    </div>)
                 }
 
             </>
