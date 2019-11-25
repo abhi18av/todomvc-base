@@ -17,6 +17,7 @@ export class AddTodo extends React.Component {
 
     constructor() {
         super();
+        // NOTE `AddTodo` component local state
         this.state = {
             todo: '',
         }
@@ -29,6 +30,8 @@ export class AddTodo extends React.Component {
     submitTodo = (e) => {
         e.preventDefault();
         console.log(this.state);
+        // TODO add this item into the `App` components `state` - `component drilling`
+        this.props.addTodoFn(this.state.todo);
     };
 
     render() {
@@ -52,7 +55,7 @@ export class TodoItem extends React.Component {
     render() {
         return (
             <>
-                <AddTodo/>
+                <p>{this.props.item}</p>
             </>
         );
     }
@@ -68,10 +71,15 @@ export class TodoItem extends React.Component {
 export class TodoList extends React.Component {
 
     render() {
+
+        const {todos} = this.props;
+
         return (
-            <>
-                <TodoItem/>
-            </>
+            <div className='todoListContainer'>
+                {
+                    todos.map((_todo, _index) => <div key={_index}> {_todo} </div>)
+                }
+            </div>
         );
     }
 }
@@ -93,6 +101,18 @@ export class App extends React.Component {
 
     }
 
+
+    //NOTE set the `todos` key as a collection of previous/current this.state.todos along with the new todo
+    //NOTE we'll pass this method to the `AddTodo` component as a property.
+    addTodo = async (todo) => {
+        // NOTE we need to wait for this async function to wait before adding the todo
+        await this.setState({todos: [...this.state.todos, todo]});
+
+        localStorage.setItem('todos', JSON.stringify(this.state.todos));
+
+    };
+
+
     componentDidMount() {
 
         const todos = localStorage.getItem('todos');
@@ -103,19 +123,19 @@ export class App extends React.Component {
 
             this.setState({todos: savedTodos});
 
-            console.log('Has Todos ', todos)
+            console.log('Has Todos in LocalStorage ', todos)
 
         } else {
-            console.log('No Todos ', todos)
+            console.log('NO Todos in LocalStorage ', todos)
         }
     }
 
     render() {
         return (
             <>
-                <p>TodoMVC</p>
-                <TodoList/>
-                {JSON.stringify(this.state)}
+                <h1>TodoMVC</h1>
+                <TodoList todos={this.state.todos}/>
+                <AddTodo addTodoFn={this.addTodo}/>
             </>
         );
     }
