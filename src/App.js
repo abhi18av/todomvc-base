@@ -60,8 +60,24 @@ export class App extends React.Component {
         console.log("newTodos: ", newTodos);
     };
 
-    toggleTodo = () => {
-        this.updateTodo(this.state.todo);
+
+    toggleTodo = (e) => {
+        const clickedTodoText = e.target.innerText;
+
+        const oldTodos = JSON.parse(localStorage.getItem("todos"));
+
+        const newTodos = oldTodos.map(_todo => {
+            if (_todo.text === clickedTodoText) {
+                return {
+                    text: _todo.text,
+                    completed: !_todo.completed
+                };
+            } else {
+                return _todo;
+            }
+        });
+        localStorage.setItem("todos", JSON.stringify(newTodos));
+        this.setState({todos: newTodos});
     };
 
     // DONE detect which todo is being clicked
@@ -98,8 +114,8 @@ export class App extends React.Component {
                     <input
                         id="inputBox"
                         type="text"
-                        onChange={e => this.updateInput(e)}
-                    ></input>
+                        onChange={e => this.updateInput(e)}>
+                    </input>
 
                     <button type="submit">Add Task</button>
                 </form>
@@ -108,8 +124,7 @@ export class App extends React.Component {
                     todos.map((_aTask, _index) => (
                         <div key={_index}
                             // onClick={e => this.clickDetecter(e)}
-                             onClick={e => this.clickDetecter(e)}
-                        >
+                             onClick={e => this.toggleTodo(e)}>
                             {_aTask.text}
                         </div>
                     ))}
