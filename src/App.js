@@ -21,13 +21,13 @@ export class App extends React.Component {
         };
     }
 
-    updateInput = e => {
+    onChangeUpdateHandler = (e) => {
         this.setState({todo: e.target.value});
     };
 
     // NOTE it's good to have this as a separate method but now it's almost indistinguishable from the event handlers
     // TODO merge this function with the submitTodo
-    addTodo = async todo => {
+    addTodo = async (todo) => {
         await this.setState({
             todos: [...this.state.todos, {text: todo, completed: false}]
         });
@@ -35,33 +35,14 @@ export class App extends React.Component {
         localStorage.setItem("todos", JSON.stringify(this.state.todos));
 
         document.getElementById("inputBox").value = "";
-        console.log(this.state.todo);
     };
 
-    submitTodo = e => {
+    onSubmitTodoHandler = (e) => {
         e.preventDefault();
         this.addTodo(this.state.todo);
     };
 
-    updateTodo = todo => {
-        const newTodos = this.state.todos.map(_todo => {
-            if (_todo === todo) {
-                const aTodo = {
-                    text: _todo.text,
-                    completed: !_todo.completed
-                };
-                console.log(aTodo);
-                return aTodo;
-            } else {
-                return _todo;
-            }
-        });
-
-        console.log("newTodos: ", newTodos);
-    };
-
-
-    toggleTodo = (e) => {
+    onClickToggleHandler = (e) => {
         const clickedTodoText = e.target.innerText;
 
         const oldTodos = JSON.parse(localStorage.getItem("todos"));
@@ -94,10 +75,7 @@ export class App extends React.Component {
 
         if (todos) {
             const savedTodos = JSON.parse(todos);
-            console.log("HAS todos", savedTodos);
             this.setState({todos: savedTodos});
-        } else {
-            console.log("NO todos");
         }
     }
 
@@ -110,11 +88,11 @@ export class App extends React.Component {
                     <header className="App-header">Master React</header>
                 </div>
 
-                <form onSubmit={e => this.submitTodo(e)}>
+                <form onSubmit={e => this.onSubmitTodoHandler(e)}>
                     <input
                         id="inputBox"
                         type="text"
-                        onChange={e => this.updateInput(e)}>
+                        onChange={e => this.onChangeUpdateHandler(e)}>
                     </input>
 
                     <button type="submit">Add Task</button>
@@ -124,7 +102,7 @@ export class App extends React.Component {
                     todos.map((_aTask, _index) => (
                         <div key={_index}
                             // onClick={e => this.clickDetecter(e)}
-                             onClick={e => this.toggleTodo(e)}>
+                             onClick={e => this.onClickToggleHandler(e)}>
                             {_aTask.text}
                         </div>
                     ))}
