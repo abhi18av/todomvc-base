@@ -32,15 +32,17 @@ export class AddTodo extends React.Component {
         console.log(this.state);
         // TODO add this item into the `App` components `state` - `component drilling`
         this.props.addTodoFn(this.state.todo);
+        // NOTE accessing the raw DOM method to reset the state of the input
+        document.getElementById('addTodoInput').value = '';
     };
 
     render() {
         return (
             <div className='addTodoContainer'>
                 <form onSubmit={(e) => this.submitTodo(e)}>
-                    <input
-                        onChange={(e) => this.updateInput(e)}
-                        type='text'>
+                    <input id='addTodoInput'
+                           onChange={(e) => this.updateInput(e)}
+                           type='text'>
                     </input>
                     <button type='submit'>Add Todo</button>
                 </form>
@@ -55,7 +57,7 @@ export class TodoItem extends React.Component {
     render() {
         return (
             <>
-                <p>{this.props.item}</p>
+                <div>{JSON.stringify(this.props.children)}</div>
             </>
         );
     }
@@ -77,7 +79,11 @@ export class TodoList extends React.Component {
         return (
             <div className='todoListContainer'>
                 {
-                    todos.map((_todo, _index) => <div key={_index}> {_todo} </div>)
+                    todos.map((_todo, _index) => (
+                        <TodoItem key={_index}>
+                            {_todo}
+                        </TodoItem>)
+                    )
                 }
             </div>
         );
