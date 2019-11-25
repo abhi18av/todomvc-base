@@ -55,9 +55,11 @@ export class AddTodo extends React.Component {
 export class TodoItem extends React.Component {
 
     render() {
+        const todoItem = this.props.todo;
+
         return (
             <>
-                <div>{JSON.stringify(this.props.children)}</div>
+                <div>{todoItem}</div>
             </>
         );
     }
@@ -79,11 +81,8 @@ export class TodoList extends React.Component {
         return (
             <div className='todoListContainer'>
                 {
-                    todos.map((_todo, _index) => (
-                        <TodoItem key={_index}>
-                            {_todo}
-                        </TodoItem>)
-                    )
+                    todos.map((_todo, _index) => <TodoItem key={_index} todo={_todo}/>)
+
                 }
             </div>
         );
