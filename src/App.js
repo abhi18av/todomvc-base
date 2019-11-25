@@ -55,11 +55,11 @@ export class TodoItem extends React.Component {
 
 
     toggleTodo = () => {
-
+        this.props.updateTodoFn(this.props.todo);
     };
 
     render() {
-        const todo = this.props;
+        const todo = this.props.todo;
 
         return (
             <>
@@ -70,13 +70,18 @@ export class TodoItem extends React.Component {
 }
 
 
-
 //=============================
 // containers
 //=============================
 
 
 export class TodoList extends React.Component {
+
+
+    //NOTE this method is basically in transition from App component untill TodoItem component
+    updateTodo = (todo) => {
+        this.props.updateTodoFn(todo)
+    };
 
     render() {
 
@@ -85,7 +90,9 @@ export class TodoList extends React.Component {
         return (
             <div className='todoListContainer'>
                 {
-                    todos.map((_todo, _index) => <TodoItem key={_index} todo={_todo}/>)
+                    todos.map((_todo, _index) => <TodoItem key={_index}
+                                                           todo={_todo}
+                                                           updateTodoFn={this.updateTodo}/>)
 
                 }
             </div>
@@ -128,6 +135,20 @@ export class App extends React.Component {
     };
 
 
+    updateTodo = (todo) => {
+        const newTodos = this.state.todos.map(_todo => {
+                if (todo === _todo) {
+                    return {
+                        text: todo.text,
+                        completed: !todo.completed
+                    }
+                } else {
+                    return _todo
+                }
+            }
+        )
+    };
+
     componentDidMount() {
 
         const todos = localStorage.getItem('todos');
@@ -146,7 +167,8 @@ export class App extends React.Component {
         return (
             <>
                 <h1>TodoMVC</h1>
-                <TodoList todos={this.state.todos}/>
+                <TodoList todos={this.state.todos}
+                          updateTodoFn={this.updateTodo}/>
                 <AddTodo addTodoFn={this.addTodo}/>
             </>
         );
