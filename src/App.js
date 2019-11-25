@@ -17,23 +17,24 @@ export class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            todos: ["task1", "task2"]
+            todos: ["task1", "task2"],
+            todo: ''
         };
     };
 
-
-    onChangeHandler = (e) => {
-        console.log(e);
+    updateInput = (e) => {
+        this.setState({todo: e.target.value});
     };
 
-
-    onSubmitHandler = (e) => {
+    submitTodo = (e) => {
         e.preventDefault();
-        console.log(e);
+        this.addTodo(this.state.todo);
     };
 
-    addTask = () => {
-
+    addTodo = (todo) => {
+        this.setState({todos: [...this.state.todos, todo]});
+        document.getElementById('inputBox').value = '';
+        console.log(this.state);
     };
 
 
@@ -49,9 +50,8 @@ export class App extends React.Component {
         } else {
             console.log("NO todos");
         }
-
-
     };
+
 
     render() {
 
@@ -68,10 +68,11 @@ export class App extends React.Component {
                     todos.map((_aTask, _index) => <div key={_index}>{_aTask}</div>)
                 }
 
-                <form onSubmit={(e) => this.onSubmitHandler(e)}>
+                <form onSubmit={(e) => this.submitTodo(e)}>
                     <input
+                        id='inputBox'
                         type='text'
-                        onChange={(e) => this.onChangeHandler(e)}>
+                        onChange={(e) => this.updateInput(e)}>
                     </input>
 
                     <button
