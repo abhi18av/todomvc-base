@@ -17,7 +17,7 @@ export class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            todos: ["task1", "task2"],
+            todos: [],
             todo: ''
         };
     };
@@ -26,17 +26,26 @@ export class App extends React.Component {
         this.setState({todo: e.target.value});
     };
 
+    // NOTE it's good to have this as a separate method but now it's almost indistinguishable from the event handlers
+    // TODO merge this function with the submitTodo
+    addTodo = async (todo) => {
+        await this.setState({todos: [...this.state.todos, todo]});
+
+        localStorage.setItem('todos', JSON.stringify(this.state.todos));
+
+        document.getElementById('inputBox').value = '';
+        console.log(this.state.todo);
+    };
+
     submitTodo = (e) => {
         e.preventDefault();
         this.addTodo(this.state.todo);
     };
 
-    addTodo = (todo) => {
-        this.setState({todos: [...this.state.todos, todo]});
-        document.getElementById('inputBox').value = '';
-        console.log(this.state);
-    };
 
+    toggleTodo = () => {
+
+    };
 
     componentDidMount() {
 
@@ -64,9 +73,6 @@ export class App extends React.Component {
                     <header className="App-header">Master React</header>
                 </div>
 
-                { // render the current tasks of `todos` variable
-                    todos.map((_aTask, _index) => <div key={_index}>{_aTask}</div>)
-                }
 
                 <form onSubmit={(e) => this.submitTodo(e)}>
                     <input
@@ -80,6 +86,11 @@ export class App extends React.Component {
                         Add Task
                     </button>
                 </form>
+
+
+                { // render the current tasks of `todos` variable
+                    todos.map((_aTask, _index) => <div key={_index}>{_aTask}</div>)
+                }
 
             </>
         );
