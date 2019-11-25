@@ -29,7 +29,6 @@ export class AddTodo extends React.Component {
 
     submitTodo = (e) => {
         e.preventDefault();
-        console.log(this.state);
         // TODO add this item into the `App` components `state` - `component drilling`
         this.props.addTodoFn(this.state.todo);
         // NOTE accessing the raw DOM method to reset the state of the input
@@ -54,12 +53,17 @@ export class AddTodo extends React.Component {
 
 export class TodoItem extends React.Component {
 
+
+    toggleTodo = () => {
+
+    };
+
     render() {
-        const todoItem = this.props.todo;
+        const todo = this.props;
 
         return (
             <>
-                <div>{todoItem}</div>
+                <div onClick={this.toggleTodo}>{todo.text}</div>
             </>
         );
     }
@@ -101,7 +105,13 @@ export class App extends React.Component {
         super(props);
 
         this.state = {
-            todos: []
+            // NOTE start using object as todos rather than text
+            todos: [
+                // {
+                // text: 'Task-1',
+                // completed: true
+                // }
+            ]
         };
 
     }
@@ -111,7 +121,7 @@ export class App extends React.Component {
     //NOTE we'll pass this method to the `AddTodo` component as a property.
     addTodo = async (todo) => {
         // NOTE we need to wait for this async function to wait before adding the todo
-        await this.setState({todos: [...this.state.todos, todo]});
+        await this.setState({todos: [...this.state.todos, {text: todo, completed: false}]});
 
         localStorage.setItem('todos', JSON.stringify(this.state.todos));
 
@@ -123,16 +133,13 @@ export class App extends React.Component {
         const todos = localStorage.getItem('todos');
 
         if (todos) {
-
             const savedTodos = JSON.parse(todos);
-
             this.setState({todos: savedTodos});
-
             console.log('Has Todos in LocalStorage ', todos)
-
         } else {
             console.log('NO Todos in LocalStorage ', todos)
         }
+
     }
 
     render() {
